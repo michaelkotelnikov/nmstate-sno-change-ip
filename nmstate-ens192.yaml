@@ -1,0 +1,33 @@
+apiVersion: nmstate.io/v1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: ens192
+spec:
+  desiredState:
+    interfaces:
+      - ipv4:
+          dhcp: false
+          address:
+            - ip: 10.0.0.1
+              prefix-length: 24
+          enabled: true
+        name: ens192
+        description: Static configuration for ens192 - external network interface
+        state: up
+        type: ethernet
+    routes:
+      config:
+      - destination: 0.0.0.0/0
+        next-hop-address: 10.0.0.254
+        next-hop-interface: ens192
+        table-id: 0
+        metric: 150
+    dns-resolver:
+      config:
+        search:
+        - example.com
+        server: 
+        - 8.8.8.8
+        - 8.8.4.4
+  nodeSelector:
+    kubernetes.io/hostname: worker-1

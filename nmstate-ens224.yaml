@@ -1,0 +1,26 @@
+apiVersion: nmstate.io/v1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: ens224
+spec:
+  desiredState:
+    interfaces:
+      - ipv4:
+          dhcp: false
+          address:
+            - ip: 20.0.0.1
+              prefix-length: 24
+          enabled: true
+        name: ens224
+        description: Static configuration for ens224 - edge network interface
+        state: up
+        type: ethernet
+    routes:
+      config:
+      - destination: 0.0.0.0/0
+        next-hop-address: 20.0.0.254
+        next-hop-interface: ens224
+        table-id: 0
+        metric: 125
+  nodeSelector:
+    kubernetes.io/hostname: worker-1
